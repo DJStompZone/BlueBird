@@ -1,5 +1,5 @@
 require('./utils/methods/Globals')
-const Path = require("path");
+const Path = require("path")
 const Server = use("Server")
 
 class BlueBird{

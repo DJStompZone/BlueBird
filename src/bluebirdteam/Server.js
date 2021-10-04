@@ -2,18 +2,18 @@ const Config = use("utils/Config");
 const RakNetApdater = use("network/mcpe/RakNetApdater")
 const Fs = use("utils/SimpleFileSystem")
 const Logger = use("log/Logger")
-const readline = require('readline');
+const readline = require('readline')
 
 class Server{
     constructor(path) {
-        let start_time = Date.now();
-        this.raknet = new RakNetApdater(this)
-        this.raknet.tick()
+        let start_time = Date.now()
         this.path = path
-        this.logger = new Logger()
         if(!Fs.fileExists("BlueBird.json")){
             Fs.copy(this.path.file + "bluebirdteam/resources/BlueBird.json", this.path.data + "BlueBird.json")
         }
+        this.raknet = new RakNetApdater(this)
+        this.raknet.tick()
+        this.logger = new Logger()
         this.getLogger().info("Starting Server...")
         this.getLogger().info("Loading BlueBird.json")
         this.getLogger().info("This Server Is Running BlueBird Version 1.0!")
