@@ -1,5 +1,5 @@
 {
-  "name": "bluebird",
+  "name": "bluebirdmc",
   "version": "1.0.0",
   "description": "A software for minecraft bedrock",
   "main": "src/bluebirdteam/BlueBird.js",
@@ -7,9 +7,13 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "pocketnode-binarystream": "git+https://github.com/BlueBirdMC/NodeBinaryStream.git",
-    "dragkills-raknet": "git+https://github.com/BlueBirdMC/RakNet.git"
+    "bluebirdmc-binarystream": "git+https://github.com/BlueBirdMC/NodeBinaryStream.git",
+    "bluebirdmc-raknet": "git+https://github.com/BlueBirdMC/RakNet.git",
+    "raknet": "^1.8.0"
   },
   "author": "DRAGKILLS",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "time-stamp": "^2.2.0"
+  }
 }
