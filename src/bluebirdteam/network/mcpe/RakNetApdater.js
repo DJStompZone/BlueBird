@@ -1,22 +1,25 @@
 const RakNetServer = (require("bluebirdmc-raknet") ?? require("raknet"))
 const Logger = use("log/Logger")
+const Fs = use("utils/SimpleFileSystem")
+const ProtocolInfo = use("network/mcpe/protocol/ProtocolInfo")
+const Config = use("utils/Config")
 
 'use strict'
 
 class RakNetApdater{
     constructor(server) {
         this.server = server
+        this.bluebirdcfg = new Config("BlueBird.json", Config.JSON)
         this.playersCount = 0
-        this.connected = "null"
-        this.raknetserver = new RakNetServer(19132, new Logger())
+        this.raknetserver = new RakNetServer(this.bluebirdcfg.get("port"), new Logger())
         this.raknetserver.getServerName()
             .setServerId(1)
-            .setMotd("Nothing now")
-            .setName("Nothing now")
+            .setMotd(this.bluebirdcfg.get("motd"))
+            .setName(this.bluebirdcfg.get("motd"))
             .setOnlinePlayers(this.playersCount)
-            .setMaxPlayers(10)
-            .setProtocol(465)
-            .setVersion("1.17.32") // you can join in 1.17.30 cuz its same protocol of 1.17.32
+            .setMaxPlayers(this.bluebirdcfg.get("maxplayers"))
+            .setProtocol(ProtocolInfo.CURRENT_PROTOCOL)
+            .setVersion(ProtocolInfo.MINECRAFT_VERSION)
             .setGamemode("Creative")
         this.logger = new Logger()
     }
@@ -35,10 +38,7 @@ class RakNetApdater{
     }
 
     close(player, reason = "unknown reason"){
-        //hacky method
-        if(this.connected !== "null"){
-            this.raknetserver.getSessionManager().removeSession(this.raknetserver.getSessionManager().getSession(player.ipv6, player._port), reason);
-        }
+        this.raknetserver.getSessionManager().removeSession(this.raknetserver.getSessionManager().getSession(player._ip, player._port), reason);
     }
 
     shutdown(){
@@ -48,12 +48,10 @@ class RakNetApdater{
     _handleIncomingMessage(purpose, data){
         switch(purpose){
             case "openSession":
-                this.connected = data.ipv6
-                this.playerCount += 1
+                this.playersCount += 1
                 break;
             case "closeSession":
-                this.connected = data.ipv6
-                this.playerCount -= 1
+                this.playersCount -= 1
                 break;
         }
     }

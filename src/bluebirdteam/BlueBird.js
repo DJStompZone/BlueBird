@@ -1,10 +1,15 @@
 require('./utils/methods/Globals')
+const Path = require("path");
 const Server = use("Server")
 
 class BlueBird{
 
     constructor() {
-        new Server()
+        let path = {
+            file: Path.normalize(__dirname + "/../"),
+            data: Path.normalize(__dirname + "/../../")
+        };
+        new Server(path)
     }
 
 }
