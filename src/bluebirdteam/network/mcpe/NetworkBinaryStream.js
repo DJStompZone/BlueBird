@@ -8,7 +8,7 @@ class NetworkBinaryStream extends require("bluebirdmc-binarystream"){
      * @return {string}
      */
     readString(){
-        return this.read(this.readUnsignedVarInt()).toString();
+        return this.read(this.readUnsignedVarInt().toString());
     }
 
     /**
@@ -17,8 +17,7 @@ class NetworkBinaryStream extends require("bluebirdmc-binarystream"){
      */
     writeString(v){
         this.writeUnsignedVarInt(Buffer.byteLength(v));
-        if(v.length === 0) return this;
-        this.append(Buffer.from(v, "utf8"));
+        this.append(v);
         return this;
     }
 
