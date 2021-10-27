@@ -11,11 +11,11 @@ class Logger {
     }
 
     emergency(){
-        return this.log("Emergency", arguments, TerminalTextFormat.RED);
+        return this.log("EMERGENCY", arguments, TerminalTextFormat.RED);
     }
 
     alert(){
-        return this.log("Alert", arguments, TerminalTextFormat.RED);
+        return this.log("ALERT", arguments, TerminalTextFormat.RED);
     }
 
     critical(){
@@ -23,29 +23,29 @@ class Logger {
     }
 
     error(){
-        return this.log("Error", arguments, TerminalTextFormat.DARK_RED);
+        return this.log("ERROR", arguments, TerminalTextFormat.DARK_RED);
     }
 
     warning(){
-        return this.log("Warning", arguments, TerminalTextFormat.YELLOW);
+        return this.log("WARNING", arguments, TerminalTextFormat.YELLOW);
     }
 
     notice(){
-        return this.log("Notice", arguments, TerminalTextFormat.AQUA);
+        return this.log("NOTICE", arguments, TerminalTextFormat.AQUA);
     }
 
     info(){
-        return this.log("Info", arguments, TerminalTextFormat.WHITE);
+        return this.log("INFO", arguments, TerminalTextFormat.WHITE);
     }
 
     debug(){
         if(this.debuggingLevel < 1) return;
-        return this.log("Debug", arguments, TerminalTextFormat.GRAY);
+        return this.log("DEBUG", arguments, TerminalTextFormat.GRAY);
     }
 
     debugExtensive(){
         if(this.debuggingLevel < 2) return;
-        return this.log("Debug", arguments, TerminalTextFormat.GRAY);
+        return this.log("DEBUG", arguments, TerminalTextFormat.GRAY);
     }
 
     logError(error){
@@ -64,7 +64,7 @@ class Logger {
 
         messages = Array.from(messages).map(message => (typeof message === "string" ? TextFormat.toTerminal(message) : message) + TerminalTextFormat.RESET);
 
-        log(TerminalTextFormat.BLUE + "[" + TimeStamp("HH:mm:ss") + "]" + TerminalTextFormat.RESET + " " + color +"[" + "Server thead/" + level + "]:" + this.subcaller, messages);
+        log(TerminalTextFormat.BLUE + "[" + TimeStamp("HH:mm:ss") + "]" + TerminalTextFormat.RESET + " " + color +"[" + "Server thread/" + level + "]:" + this.subcaller, messages);
 
         function log(prefix, args){
             console.log(prefix, ...args);
