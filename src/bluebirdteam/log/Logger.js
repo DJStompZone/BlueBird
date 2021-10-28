@@ -19,7 +19,7 @@ class Logger {
     }
 
     critical(){
-        return this.log("Critical", arguments, TerminalTextFormat.RED);
+        return this.log("CRITICAL", arguments, TerminalTextFormat.RED);
     }
 
     error(){
