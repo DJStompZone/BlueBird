@@ -5,6 +5,7 @@ const Logger = use("log/Logger")
 const ConsoleCommandReader = use("command/ConsoleCommandReader")
 
 class Server{
+
     constructor(path) {
         let start_time = Date.now()
         this.path = path
