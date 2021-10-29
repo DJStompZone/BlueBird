@@ -4,8 +4,6 @@ const Fs = use("utils/SimpleFileSystem")
 const ProtocolInfo = use("network/mcpe/protocol/ProtocolInfo")
 const Config = use("utils/Config")
 
-'use strict'
-
 class RakNetApdater{
     constructor(server) {
         this.server = server
