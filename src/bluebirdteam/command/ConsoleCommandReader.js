@@ -28,7 +28,7 @@ class ConsoleCommandReader {
                         this.server.getLogger().info("Server Stopped!")
                     }catch (e){
                         this.server.getLogger().error("Cannot Stop the server reason: " + e.errorDetail)
-                        this.server.getLogger().alert("Closing Server...");
+                        this.server.getLogger().alert("Closing Server...")
                     }
                     process.exit(1)
                     break;
