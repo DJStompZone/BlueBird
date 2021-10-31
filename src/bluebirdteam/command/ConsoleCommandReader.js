@@ -1,4 +1,5 @@
 const readline = require('readline')
+const TerminalTextformat = use("utils/TerminalTextFormat")
 
 class ConsoleCommandReader {
 
@@ -13,9 +14,6 @@ class ConsoleCommandReader {
             }
         )
         rl.on("line", (input) => {
-            if(input === "stop" || input === "help" || input === ""){}else{
-                this.server.getLogger().info("Unknown Command! Please type help to see all commands")
-            }
             switch (input){
                 case "help":
                     this.server.getLogger().info("Commands List:")
@@ -31,6 +29,12 @@ class ConsoleCommandReader {
                         this.server.getLogger().alert("Closing Server...")
                     }
                     process.exit(1)
+                    break;
+                default:
+                    default:
+                    if(input.trim() !== ""){
+                        this.logger.info(TerminalTextformat.RED + "Unknown command. Try /help for a list of commands");
+                    }
                     break;
             }
         })
