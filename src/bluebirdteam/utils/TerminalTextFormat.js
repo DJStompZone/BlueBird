@@ -1,4 +1,5 @@
 const TerminalTextFormat = {};
+
 TerminalTextFormat.ESCAPE        = "\u001b";
 TerminalTextFormat.BLACK         = TerminalTextFormat.ESCAPE + "[30m";
 TerminalTextFormat.DARK_BLUE     = TerminalTextFormat.ESCAPE + "[34m";
