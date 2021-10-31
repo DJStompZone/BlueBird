@@ -9,34 +9,26 @@ class ConsoleCommandReader {
     }
 
     tick(){
-        let rl = readline.createInterface(process.stdin, process.stdout)
-        rl.prompt()
-        rl.on("line", (arg) => {
-            if(arg !== "stop" || arg !== "help"){
-                rl.prompt()
+        let rl = readline.createInterface(
+            {
+                input: process.stdin
             }
-            if(arg === "stop" || arg === "help" || arg === ""){}else{
+        )
+        rl.on("line", (input) => {
+            if(input === "stop" || input === "help" || input === ""){}else{
                 this.logger.info("Unknown Command! Please type help to see all commands")
-                rl.prompt()
             }
-            switch (arg){
+            switch (input){
                 case "help":
-                    rl.prompt()
                     this.logger.info("Commands List:")
-                    rl.prompt()
                     this.logger.info("stop: shutdown the server")
-                    rl.prompt()
                     break;
                 case "stop":
-                    rl.prompt()
                     this.logger.info("Stopping Server...")
                     try{
                         this.server.raknet.shutdown()
-                        rl.prompt()
                         this.logger.info("Server Stopped!")
-                        rl.close()
                     }catch (e){
-                        rl.prompt()
                         this.logger.error("Cannot Stop the server reason: " + e.errorDetail)
                     }
                     process.exit(1)
