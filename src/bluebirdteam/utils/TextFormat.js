@@ -1,6 +1,7 @@
 const TerminalTextFormat = use("utils/TerminalTextFormat");
 
 const TextFormat = {};
+
 TextFormat.ESCAPE        = "\u00A7";
 TextFormat.BLACK         = TextFormat.ESCAPE + "0";
 TextFormat.DARK_BLUE     = TextFormat.ESCAPE + "1";
@@ -18,7 +19,6 @@ TextFormat.RED           = TextFormat.ESCAPE + "c";
 TextFormat.LIGHT_PURPLE  = TextFormat.ESCAPE + "d";
 TextFormat.YELLOW        = TextFormat.ESCAPE + "e";
 TextFormat.WHITE         = TextFormat.ESCAPE + "f";
-
 TextFormat.OBFUSCATED    = TextFormat.ESCAPE + "k";
 TextFormat.BOLD          = TextFormat.ESCAPE + "l";
 TextFormat.STRIKETHROUGH = TextFormat.ESCAPE + "m";
