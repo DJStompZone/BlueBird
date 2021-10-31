@@ -1,11 +1,9 @@
 const readline = require('readline')
-const Logger = use("log/Logger")
 
 class ConsoleCommandReader {
 
     constructor(server) {
         this.server = server
-        this.logger = new Logger()
     }
 
     tick(){
@@ -16,20 +14,20 @@ class ConsoleCommandReader {
         )
         rl.on("line", (input) => {
             if(input === "stop" || input === "help" || input === ""){}else{
-                this.logger.info("Unknown Command! Please type help to see all commands")
+                this.server.getLogger().info("Unknown Command! Please type help to see all commands")
             }
             switch (input){
                 case "help":
-                    this.logger.info("Commands List:")
-                    this.logger.info("stop: shutdown the server")
+                    this.server.getLogger().info("Commands List:")
+                    this.server.getLogger().info("stop: shutdown the server")
                     break;
                 case "stop":
-                    this.logger.info("Stopping Server...")
+                    this.server.getLogger().info("Stopping Server...")
                     try{
                         this.server.raknet.shutdown()
-                        this.logger.info("Server Stopped!")
+                        this.server.getLogger().info("Server Stopped!")
                     }catch (e){
-                        this.logger.error("Cannot Stop the server reason: " + e.errorDetail)
+                        this.server.getLogger().error("Cannot Stop the server reason: " + e.errorDetail)
                     }
                     process.exit(1)
                     break;
