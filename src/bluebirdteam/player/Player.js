@@ -37,20 +37,20 @@ class Player{
 
     sendDataPacket(packet, needACK = false, immediate = false){
         CheckTypes([DataPacket, packet], [Boolean, needACK], [Boolean, immediate]);
-        if(!this.isConnected()) return false;
-
-        if(!packet.canBeSentBeforeLogin()){
-            throw new Error("Attempted to send "+packet.getName()+" to "+this.ip+" before they got logged in.");
+        if (this.isConnected()) {
+            if (!packet.canBeSentBeforeLogin()) {
+                throw new Error("Attempted to send " + packet.getName() + " to " + this.ip + " before they got logged in.");
+            }
+            let identifier = this.getSessionAdapter().sendPacket(packet, needACK, immediate);
+            if (!(needACK && identifier !== null)) {
+                return true;
+            } else {
+                this.needACK[identifier] = false;
+                return identifier;
+            }
+        } else {
+            return false;
         }
-
-        let identifier = this.getSessionAdapter().sendPacket(packet, needACK, immediate);
-
-        if(needACK && identifier !== null){
-            this.needACK[identifier] = false;
-            return identifier;
-        }
-
-        return true;
     }
 }
 
