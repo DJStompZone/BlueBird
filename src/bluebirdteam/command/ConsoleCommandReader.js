@@ -32,7 +32,7 @@ class ConsoleCommandReader {
                     break;
                 default:
                     if(input.trim() !== ""){
-                        this.logger.info(TerminalTextformat.RED + "Unknown command. Try /help for a list of commands")
+                        this.server.getLogger().info(TerminalTextformat.RED + "Unknown command. Try /help for a list of commands")
                     }
                     break;
             }
