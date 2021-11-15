@@ -4,7 +4,7 @@ const TextFormat = use("utils/TextFormat");
 const TerminalTextFormat = use("utils/TerminalTextFormat");
 
 class Logger {
-    constructor(caller, subcaller = ""){
+    constructor(caller = "Server thread", subcaller = ""){
         this.debuggingLevel = 0;
         this.caller = caller;
         this.subcaller = subcaller !== "" ? " " + subcaller : "";
@@ -64,7 +64,7 @@ class Logger {
 
         messages = Array.from(messages).map(message => (typeof message === "string" ? TextFormat.toTerminal(message) : message) + TerminalTextFormat.RESET);
 
-        log(TerminalTextFormat.BLUE + "[" + TimeStamp("HH:mm:ss") + "]" + TerminalTextFormat.RESET + " " + color +"[" + "Server thread/" + level + "]:" + this.subcaller, messages);
+        log(TerminalTextFormat.BLUE + "[" + TimeStamp("HH:mm:ss") + "]" + TerminalTextFormat.RESET + " " + color +"[" + caller + "/" + level + "]:" + this.subcaller, messages);
 
         function log(prefix, args){
             console.log(prefix, ...args);
