@@ -18,7 +18,7 @@ class RakNetApdater{
             .setMaxPlayers(this.bluebirdcfg.get("maxplayers"))
             .setProtocol(ProtocolInfo.CURRENT_PROTOCOL)
             .setVersion(ProtocolInfo.MINECRAFT_VERSION)
-            .setGamemode("Creative")
+            .setGamemode("Creative");
     }
 
     sendPacket(player, packet, needACK, immediate){
