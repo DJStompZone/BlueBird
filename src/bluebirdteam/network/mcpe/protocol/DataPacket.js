@@ -64,6 +64,13 @@ class DataPacket extends NetworkBinaryStream{
 
     decodePayload(){}
 
+    encode(){
+        this.reset();
+        this.encodeHeader();
+        this.encodePayload();
+        this.isEncoded = true;
+    }
+
     encodeHeader(){
         this.writeUnsignedVarInt(
             self.NETWORK_ID |
