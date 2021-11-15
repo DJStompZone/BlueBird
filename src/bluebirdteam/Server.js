@@ -1,3 +1,4 @@
+const PacketPool = require("./network/mcpe/protocol/PacketPool");
 const Config = use("utils/Config");
 const RakNetAdapter = use("network/mcpe/RakNetAdapter")
 const Fs = use("utils/SimpleFileSystem")
@@ -8,6 +9,9 @@ class Server{
 
     constructor(path) {
         let start_time = Date.now()
+        
+        PacketPool.init();
+        
         this.path = path
         if(!Fs.fileExists("BlueBird.json")){
             Fs.copy(this.path.file + "bluebirdteam/resources/BlueBird.json", this.path.data + "BlueBird.json")
@@ -38,6 +42,11 @@ class Server{
 
     getLogger(){
         return this.logger;
+    }
+
+    shutdown(){
+        this.raknet.shutdown();
+        process.exit(1);
     }
 }
 
