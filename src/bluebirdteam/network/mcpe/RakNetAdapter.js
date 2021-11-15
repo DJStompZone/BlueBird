@@ -4,7 +4,7 @@ const Fs = use("utils/SimpleFileSystem");
 const ProtocolInfo = use("network/mcpe/protocol/ProtocolInfo");
 const Config = use("utils/Config");
 
-class RakNetApdater{
+class RakNetAdapter {
     constructor(server) {
         this.server = server;
         this.bluebirdcfg = new Config("BlueBird.json", Config.JSON);
@@ -53,4 +53,4 @@ class RakNetApdater{
         }
     }
 }
-module.exports = RakNetApdater
+module.exports = RakNetAdapter
