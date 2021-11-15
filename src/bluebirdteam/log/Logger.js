@@ -64,7 +64,7 @@ class Logger {
 
         messages = Array.from(messages).map(message => (typeof message === "string" ? TextFormat.toTerminal(message) : message) + TerminalTextFormat.RESET);
 
-        log(TerminalTextFormat.BLUE + "[" + TimeStamp("HH:mm:ss") + "]" + TerminalTextFormat.RESET + " " + color +"[" + caller + "/" + level + "]:" + this.subcaller, messages);
+        log(TerminalTextFormat.BLUE + "[" + TimeStamp("HH:mm:ss") + "]" + TerminalTextFormat.RESET + " " + color +"[" + this.caller + "/" + level + "]:" + this.subcaller, messages);
 
         function log(prefix, args){
             console.log(prefix, ...args);
