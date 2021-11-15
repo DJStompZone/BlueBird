@@ -10,7 +10,7 @@ class Server{
 
     constructor(path) {
         let start_time = Date.now()
-        #this.id = 0;
+        this.id = 0;
         PacketPool.init();
         this.path = path
         if(!Fs.fileExists("BlueBird.json")){
