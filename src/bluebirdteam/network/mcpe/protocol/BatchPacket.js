@@ -77,8 +77,8 @@ class BatchPacket extends DataPacket{
             return false;
         }
         this.getPackets().forEach(buf => {
-            let pk = PacketPool.getPacket(buf);
-
+            let pok = new PacketPool();
+            let pk = pok.getPacket(buf);
             if(!pk.canBeBatched()){
                 throw new Error("Received invalid " + pk.getName() + " inside BatchPacket");
             }
