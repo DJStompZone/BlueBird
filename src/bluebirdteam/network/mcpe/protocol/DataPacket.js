@@ -56,8 +56,7 @@ class DataPacket extends NetworkBinaryStream{
         let header = this.readUnsignedVarInt();
         let pid = header & self.PID_MASK;
         if(pid !== self.NETWORK_ID){
-            console.log(`Expected ${self.NETWORK_ID} for packet ID, got ${pid}`);
-            this.server.shutdown();
+            throw new Error(`Expected ${self.NETWORK_ID} for packet ID, got ${pid}`);
         }
         this.senderSubId = (header >> self.SENDER_SUBCLIENT_ID_SHIFT) & self.SUBCLIENT_ID_MASK;
         this.recipientSubId = (header >> self.RECIPIENT_SUBCLIENT_ID_SHIFT) & self.SUBCLIENT_ID_MASK;
