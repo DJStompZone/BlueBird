@@ -12,8 +12,8 @@ class RakNetAdapter {
         this.server = server;
         this.bluebirdcfg = new Config("BlueBird.json", Config.JSON);
         this.playersCount = 0;
-        this.raknetserver = new RakNetServer(this.bluebirdcfg.get("port"), this.logger = new Logger("RakNet"));
-        this.raknetserver.getServerName()
+        this.raknet = new RakNetServer(this.bluebirdcfg.get("port"), this.logger = new Logger("RakNet"));
+        this.raknet.getServerName()
             .setMotd(this.bluebirdcfg.get("motd"))
             .setName(this.bluebirdcfg.get("motd"))
             .setProtocol(ProtocolInfo.CURRENT_PROTOCOL)
@@ -25,10 +25,11 @@ class RakNetAdapter {
         this.packetPool = new PacketPool();
         this.packetPool.init();
         this.players = new PlayerList();
+        this.logger.setDebugging(1); // remove this when done
     }
 
     setName(name){
-        return this.raknetserver.getServerName().setMotd(name);
+        return this.raknet.getServerName().setMotd(name);
     }
 
     sendPacket(player, packet, needACK, immediate){
@@ -37,7 +38,7 @@ class RakNetAdapter {
 
             if(packet instanceof BatchPacket){
                 let session;
-                if((session = this.raknetserver.getSessionManager().getSessionByIdentifier(identifier))){
+                if((session = this.raknet.getSessionManager().getSessionByIdentifier(identifier))){
                     session.queueConnectedPacketFromServer(packet, needACK, immediate);
                 }
                 return null;
@@ -48,9 +49,9 @@ class RakNetAdapter {
     }
 
     tick(){
-        this.raknetserver.getSessionManager().readOutgoingMessages().forEach(message => this._handleIncomingMessage(message.purpose, message.data));
+        this.raknet.getSessionManager().readOutgoingMessages().forEach(message => this._handleIncomingMessage(message.purpose, message.data));
 
-        this.raknetserver.getSessionManager().getSessions().forEach(session => {
+        this.raknet.getSessionManager().getSessions().forEach(session => {
             let player = this.players.getPlayer(session.toString());
 
             session.packetBatches.getAllAndClear().forEach(packet => {
@@ -64,13 +65,13 @@ class RakNetAdapter {
 
     close(player, reason = "unknown reason"){
         if(this.players.hasPlayer(player.ip + ":" + player.port)){
-            this.raknetserver.getSessionManager().removeSession(this.raknetserver.getSessionManager().getSession(player.ip, player.port), reason);
+            this.raknet.getSessionManager().removeSession(this.raknet.getSessionManager().getSession(player.ip, player.port), reason);
             this.players.removePlayer(player.ip + ":" + player.port);
         }
     }
 
     shutdown(){
-        this.raknetserver.shutdown();
+        this.raknet.shutdown();
     }
 
     _handleIncomingMessage(purpose, data){
