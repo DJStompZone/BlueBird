@@ -10,9 +10,8 @@ class Server{
 
     constructor(path) {
         let start_time = Date.now()
-
+        #this.id = 0;
         PacketPool.init();
-
         this.path = path
         if(!Fs.fileExists("BlueBird.json")){
             Fs.copy(this.path.file + "bluebirdteam/resources/BlueBird.json", this.path.data + "BlueBird.json")
@@ -32,6 +31,10 @@ class Server{
         this.raknet.tick()
         let reader = new ConsoleCommandReader(this)
         reader.tick()
+    }
+
+    getId(){
+        return this.id;
     }
 
     batchPackets(players, packets, forceSync = false, immediate = false){
