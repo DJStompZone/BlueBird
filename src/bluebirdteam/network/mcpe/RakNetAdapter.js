@@ -80,7 +80,7 @@ class RakNetAdapter {
                 let player = new Player(this.server, data.clientId, data.ip, data.port);
                 this.players.addPlayer(data.identifier, player);
                 this.playersCount += 1;
-                this.logger.info("get new connection " + player.ip + ":" + player.port);
+                this.logger.info("got new connection " + player.ip + ":" + player.port);
                 break;
             case "closeSession":
                 if(this.players.has(data.identifier)){
