@@ -1,6 +1,8 @@
+const BatchPacket = require("./protocol/BatchPacket");
+const PlayerList = require("../../player/PlayerList");
+const Player = require("../../player/Player");
 const RakNetServer = (require("bluebirdmc-raknet") ?? require("raknet"));
 const Logger = use("log/Logger");
-const Fs = use("utils/SimpleFileSystem");
 const ProtocolInfo = use("network/mcpe/protocol/ProtocolInfo");
 const Config = use("utils/Config");
 
@@ -19,23 +21,45 @@ class RakNetAdapter {
             .setProtocol(ProtocolInfo.CURRENT_PROTOCOL)
             .setVersion(ProtocolInfo.MINECRAFT_VERSION)
             .setGamemode("Creative");
+        this.players = new PlayerList();
     }
 
     sendPacket(player, packet, needACK, immediate){
-        //TODO: add send packet
-        this.logger.debug("Sending "+packet.getName()+": " + packet.buffer);
+        if(this.players.hasPlayer(player)){
+            let identifier = this.players.getPlayerIdentifier(player);
+
+            if(packet instanceof BatchPacket){
+                let session;
+                if((session = this.raknetserver.getSessionManager().getSessionByIdentifier(identifier))){
+                    session.queueConnectedPacketFromServer(packet, needACK, immediate);
+                }
+                return null;
+            }else{
+                this.server.batchPackets([player], [packet], true, immediate);
+            }
+        }
     }
 
     tick(){
         this.raknetserver.getSessionManager().readOutgoingMessages().forEach(message => this._handleIncomingMessage(message.purpose, message.data));
 
         this.raknetserver.getSessionManager().getSessions().forEach(session => {
-            // use batch packet
+            let player = this.players.getPlayer(session.toString());
+
+            session.packetBatches.getAllAndClear().forEach(packet => {
+                let pk = new BatchPacket();
+                pk.setBuffer(packet.getStream().getBuffer(), 1);
+                pk.decode();
+                pk.handle(player.getSessionAdapter());
+            });
         });
     }
 
     close(player, reason = "unknown reason"){
-        this.raknetserver.getSessionManager().removeSession(this.raknetserver.getSessionManager().getSession(player._ip, player._port), reason);
+        if(this.players.hasPlayer(player._ip + ":" + player._port)){
+            this.raknetserver.getSessionManager().removeSession(this.raknetserver.getSessionManager().getSession(player._ip, player._port), reason);
+            this.players.removePlayer(player._ip + ":" + player._port);
+        }
     }
 
     shutdown(){
@@ -45,10 +69,17 @@ class RakNetAdapter {
     _handleIncomingMessage(purpose, data){
         switch(purpose){
             case "openSession":
-                this.playersCount += 1;
+                let player = new Player(this.server, data.clientId, data.ip, data.port);
+                this.players.addPlayer(data.identifier, player);
+                this.playersCount = this.playersCount + 1;
                 break;
             case "closeSession":
-                this.playersCount -= 1;
+                if(this.players.has(data.identifier)){
+                    let player = this.players.get(data.identifier);
+                    //player.close("Left The Server", data.reason);
+                    this.close(this.players.getPlayer(data.identifier), data.reason);
+                    this.playersCount = this.playersCount - 1;
+                }
                 break;
         }
     }
