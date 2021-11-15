@@ -1,9 +1,10 @@
+const RakNetServer = (require("bluebirdmc-raknet") ?? require("raknet"));
 const BatchPacket = require("./protocol/BatchPacket");
 const PlayerList = require("../../player/PlayerList");
 const Player = require("../../player/Player");
-const RakNetServer = (require("bluebirdmc-raknet") ?? require("raknet"));
 const Logger = use("log/Logger");
 const ProtocolInfo = use("network/mcpe/protocol/ProtocolInfo");
+const PacketPool = require("./protocol/PacketPool");
 const Config = use("utils/Config");
 
 class RakNetAdapter {
@@ -13,15 +14,21 @@ class RakNetAdapter {
         this.playersCount = 0;
         this.raknetserver = new RakNetServer(this.bluebirdcfg.get("port"), this.logger = new Logger("RakNet"));
         this.raknetserver.getServerName()
-            .setServerId(1)
             .setMotd(this.bluebirdcfg.get("motd"))
             .setName(this.bluebirdcfg.get("motd"))
-            .setOnlinePlayers(this.playersCount)
-            .setMaxPlayers(this.bluebirdcfg.get("maxplayers"))
             .setProtocol(ProtocolInfo.CURRENT_PROTOCOL)
             .setVersion(ProtocolInfo.MINECRAFT_VERSION)
+            .setOnlinePlayers(this.playersCount)
+            .setMaxPlayers(this.bluebirdcfg.get("maxplayers"))
+            .setServerId(server.getId())
             .setGamemode("Creative");
+        this.packetPool = new PacketPool();
+        this.packetPool.init();
         this.players = new PlayerList();
+    }
+
+    setName(name){
+        return this.raknetserver.getServerName().setMotd(name);
     }
 
     sendPacket(player, packet, needACK, immediate){
