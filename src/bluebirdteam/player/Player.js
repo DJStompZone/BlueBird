@@ -1,4 +1,5 @@
 const PlayerSessionAdapter = require("../network/mcpe/PlayerSessionAdapter");
+const DataPacket = require("../network/mcpe/protocol/DataPacket");
 
 class Player{
 
@@ -8,6 +9,7 @@ class Player{
         this.clientId = clientId;
         this.ip = ip;
         this.port = port;
+        this.needACK = {};
     }
 
     /**
@@ -17,11 +19,39 @@ class Player{
         return this.sessionAdapter;
     }
 
+    isConnected(){
+        return this.sessionAdapter !== null;
+    }
+
     handleLogin(packet){}
 
     doFirstSpawn(){}
 
+    dataPacket(packet, needACK = false){
+        return this.sendDataPacket(packet, needACK, false);
+    }
 
+    directDataPacket(packet, needACK = false){
+        return this.sendDataPacket(packet, needACK, true);
+    }
+
+    sendDataPacket(packet, needACK = false, immediate = false){
+        CheckTypes([DataPacket, packet], [Boolean, needACK], [Boolean, immediate]);
+        if(!this.isConnected()) return false;
+
+        if(!packet.canBeSentBeforeLogin()){
+            throw new Error("Attempted to send "+packet.getName()+" to "+this.ip+" before they got logged in.");
+        }
+
+        let identifier = this.getSessionAdapter().sendPacket(packet, needACK, immediate);
+
+        if(needACK && identifier !== null){
+            this.needACK[identifier] = false;
+            return identifier;
+        }
+
+        return true;
+    }
 }
 
 module.exports = Player;
