@@ -1,2 +1,2 @@
-const BL = require("./src/bluebirdteam/BlueBird")
-new BL()
+const BlueBirdServer = require("./src/bluebirdteam/BlueBird");
+new BlueBirdServer();
