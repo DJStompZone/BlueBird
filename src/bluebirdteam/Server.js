@@ -1,4 +1,5 @@
 const PacketPool = require("./network/mcpe/protocol/PacketPool");
+const BatchPacket = require("./network/mcpe/protocol/BatchPacket");
 const Config = use("utils/Config");
 const RakNetAdapter = use("network/mcpe/RakNetAdapter")
 const Fs = use("utils/SimpleFileSystem")
@@ -9,9 +10,9 @@ class Server{
 
     constructor(path) {
         let start_time = Date.now()
-        
+
         PacketPool.init();
-        
+
         this.path = path
         if(!Fs.fileExists("BlueBird.json")){
             Fs.copy(this.path.file + "bluebirdteam/resources/BlueBird.json", this.path.data + "BlueBird.json")
@@ -27,15 +28,32 @@ class Server{
     }
 
     tick(){
+        process.stdout.write("BlueBird Minecraft Server");
         this.raknet = new RakNetAdapter(this)
         this.raknet.tick()
         let reader = new ConsoleCommandReader(this)
         reader.tick()
     }
 
-    /**
-     * @return {string}
-     */
+    batchPackets(players, packets, forceSync = false, immediate = false){
+        let targets = [];
+        players.forEach(player => {
+            if(player.isConnected()) targets.push(this.raknet.players.getPlayerIdentifier(player));
+        });
+
+        if(targets.length > 0){
+            let pk = new BatchPacket();
+
+            packets.forEach(packet => pk.addPacket(packet));
+
+            if(!forceSync && !immediate){
+                //TODO
+            }else{
+                this.broadcastPackets(pk, targets, immediate);
+            }
+        }
+    }
+    
     getDataPath(){
         return this.path.data;
     }
@@ -47,6 +65,26 @@ class Server{
     shutdown(){
         this.raknet.shutdown();
         process.exit(1);
+    }
+
+    broadcastPackets(pk, targets, immediate) {
+        if(!pk.isEncoded){
+            pk.encode();
+        }
+
+        if(immediate){
+            targets.forEach(id => {
+                if(this.raknet.players.has(id)){
+                    this.raknet.players.getPlayer(id).directDataPacket(pk);
+                }
+            });
+        }else{
+            targets.forEach(id => {
+                if(this.raknet.players.has(id)){
+                    this.raknet.players.getPlayer(id).dataPacket(pk);
+                }
+            });
+        }
     }
 }
 
