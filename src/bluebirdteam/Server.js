@@ -10,8 +10,7 @@ class Server{
 
     constructor(path) {
         let start_time = Date.now()
-        this.id = 0;
-        PacketPool.init();
+        this.id = 1;
         this.path = path
         if(!Fs.fileExists("BlueBird.json")){
             Fs.copy(this.path.file + "bluebirdteam/resources/BlueBird.json", this.path.data + "BlueBird.json")
