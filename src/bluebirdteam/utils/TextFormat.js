@@ -37,7 +37,7 @@ TextFormat.clean = function(str, removeFormat = true){
     return str.replace(/\x1b[\\(\\][[0-9;\\[\\(]+[Bm]/g, "").replace(/\x1b/g, "");
 }
 
-TextFormat.toTerminal = function(str){ //make this better
+TextFormat.toTerminal = function(str){
     str = TextFormat.tokenize(str);
     str.forEach((v, k) => {
         switch(v){
@@ -89,7 +89,6 @@ TextFormat.toTerminal = function(str){ //make this better
             case TextFormat.WHITE:
                 str[k] = TerminalTextFormat.WHITE;
                 break;
-
             case TextFormat.BOLD:
                 str[k] = TerminalTextFormat.BOLD;
                 break;
