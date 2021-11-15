@@ -28,7 +28,6 @@ class Server{
     }
 
     tick(){
-        process.stdout.write("BlueBird Minecraft Server");
         this.raknet = new RakNetAdapter(this)
         this.raknet.tick()
         let reader = new ConsoleCommandReader(this)
