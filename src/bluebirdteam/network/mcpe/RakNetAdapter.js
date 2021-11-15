@@ -56,9 +56,9 @@ class RakNetAdapter {
     }
 
     close(player, reason = "unknown reason"){
-        if(this.players.hasPlayer(player._ip + ":" + player._port)){
-            this.raknetserver.getSessionManager().removeSession(this.raknetserver.getSessionManager().getSession(player._ip, player._port), reason);
-            this.players.removePlayer(player._ip + ":" + player._port);
+        if(this.players.hasPlayer(player.ip + ":" + player.port)){
+            this.raknetserver.getSessionManager().removeSession(this.raknetserver.getSessionManager().getSession(player.ip, player.port), reason);
+            this.players.removePlayer(player.ip + ":" + player.port);
         }
     }
 
@@ -71,14 +71,16 @@ class RakNetAdapter {
             case "openSession":
                 let player = new Player(this.server, data.clientId, data.ip, data.port);
                 this.players.addPlayer(data.identifier, player);
-                this.playersCount = this.playersCount + 1;
+                this.playersCount += 1;
+                this.logger.info("get new connection " + player.ip + ":" + player.port);
                 break;
             case "closeSession":
                 if(this.players.has(data.identifier)){
                     let player = this.players.get(data.identifier);
                     //player.close("Left The Server", data.reason);
                     this.close(this.players.getPlayer(data.identifier), data.reason);
-                    this.playersCount = this.playersCount - 1;
+                    this.playersCount -= 1;
+                    this.logger.info("removed connection for " + player.ip + ":" + player.port);
                 }
                 break;
         }
