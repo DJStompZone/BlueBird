@@ -1,23 +1,23 @@
 class PacketPool{
 
     constructor() {
-        self.pool = new Map();
+        this.pool = new Map();
     }
 
-    static init(){
+    init(){
         //No Packets
     }
 
-    static registerPacket(packet){
-        self.pool.set(packet, packet);
+    registerPacket(packet){
+        this.pool.set(packet, packet);
     }
 
-    static getPacket(packet){
-        return self.pool.has(packet) ? new (self.pool.get(packet))() : null;
+    getPacket(packet){
+        return this.pool.has(packet) ? new (self.pool.get(packet))() : null;
     }
 
-    static isRegistered(packet){
-        return self.pool.has(packet);
+    isRegistered(packet){
+        return this.pool.has(packet);
     }
 }
 
