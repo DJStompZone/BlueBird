@@ -1,15 +1,15 @@
-const RakNetServer = (require("bluebirdmc-raknet") ?? require("raknet"))
-const Logger = use("log/Logger")
-const Fs = use("utils/SimpleFileSystem")
-const ProtocolInfo = use("network/mcpe/protocol/ProtocolInfo")
-const Config = use("utils/Config")
+const RakNetServer = (require("bluebirdmc-raknet") ?? require("raknet"));
+const Logger = use("log/Logger");
+const Fs = use("utils/SimpleFileSystem");
+const ProtocolInfo = use("network/mcpe/protocol/ProtocolInfo");
+const Config = use("utils/Config");
 
 class RakNetApdater{
     constructor(server) {
-        this.server = server
-        this.bluebirdcfg = new Config("BlueBird.json", Config.JSON)
-        this.playersCount = 0
-        this.raknetserver = new RakNetServer(this.bluebirdcfg.get("port"), this.logger = new Logger("RakNet"))
+        this.server = server;
+        this.bluebirdcfg = new Config("BlueBird.json", Config.JSON);
+        this.playersCount = 0;
+        this.raknetserver = new RakNetServer(this.bluebirdcfg.get("port"), this.logger = new Logger("RakNet"));
         this.raknetserver.getServerName()
             .setServerId(1)
             .setMotd(this.bluebirdcfg.get("motd"))
@@ -23,7 +23,7 @@ class RakNetApdater{
 
     sendPacket(player, packet, needACK, immediate){
         //TODO: add send packet
-        this.logger.debug("Sending "+packet.getName()+": " + packet.buffer)
+        this.logger.debug("Sending "+packet.getName()+": " + packet.buffer);
     }
 
     tick(){
@@ -39,16 +39,16 @@ class RakNetApdater{
     }
 
     shutdown(){
-        this.raknetserver.shutdown()
+        this.raknetserver.shutdown();
     }
 
     _handleIncomingMessage(purpose, data){
         switch(purpose){
             case "openSession":
-                this.playersCount += 1
+                this.playersCount += 1;
                 break;
             case "closeSession":
-                this.playersCount -= 1
+                this.playersCount -= 1;
                 break;
         }
     }
