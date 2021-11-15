@@ -9,7 +9,7 @@ class RakNetApdater{
         this.server = server
         this.bluebirdcfg = new Config("BlueBird.json", Config.JSON)
         this.playersCount = 0
-        this.raknetserver = new RakNetServer(this.bluebirdcfg.get("port"), new Logger())
+        this.raknetserver = new RakNetServer(this.bluebirdcfg.get("port"), this.logger = new Logger("RakNet"))
         this.raknetserver.getServerName()
             .setServerId(1)
             .setMotd(this.bluebirdcfg.get("motd"))
@@ -19,7 +19,6 @@ class RakNetApdater{
             .setProtocol(ProtocolInfo.CURRENT_PROTOCOL)
             .setVersion(ProtocolInfo.MINECRAFT_VERSION)
             .setGamemode("Creative")
-        this.logger = new Logger()
     }
 
     sendPacket(player, packet, needACK, immediate){
