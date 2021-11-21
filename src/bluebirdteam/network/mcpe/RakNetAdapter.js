@@ -49,8 +49,9 @@ class RakNetAdapter {
     }
 
     tick(){
-        let message = this.raknet.getSessionManager().readOutgoingMessages();
-        this._handleIncomingMessage(message.purpose, message.data)
+        this.raknet.getSessionManager().readOutgoingMessages().forEach(message => {
+            this._handleIncomingMessage(message.purpose, message.data);
+        });
 
         this.raknet.getSessionManager().getSessions().forEach(session => {
             let player = this.players.getPlayer(session.toString());
@@ -77,6 +78,9 @@ class RakNetAdapter {
 
     _handleIncomingMessage(purpose, data){
         switch(purpose){
+            case "undefined":
+                this.logger.info("undefined purpose \"Need fix\"");
+                break;
             case "openSession":
                 let player = new Player(this.server, data.clientId, data.ip, data.port);
                 this.players.addPlayer(data.identifier, player);
