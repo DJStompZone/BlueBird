@@ -1,4 +1,4 @@
-const RakNetServer = (require("bluebirdmc-raknet") ?? require("raknet"));
+const RakNetServer = require("bluebirdmc-raknet/server/RakNetServer");
 const BatchPacket = require("./protocol/BatchPacket");
 const PlayerList = require("../../player/PlayerList");
 const Player = require("../../player/Player");
